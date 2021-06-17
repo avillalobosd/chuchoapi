@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {Link} from 'react-router-dom';
 // import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Info() {
   const classes = useStyles();
   const { register, handleSubmit } = useForm()
-  const [value, setValue] = useState('recents');
+  const [value, setValue] = useState('anuncios');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -91,7 +92,7 @@ export default function Info() {
     <Container className="containerInfo">
       <Container className={classes.root}>
         <BottomNavigation value={value} onChange={handleChange}>
-          <BottomNavigationAction label="Registrar" value="registrar" icon={<AddIcon />} />
+          <BottomNavigationAction component={Link} to={'/registrar'}label="Registrar" value="registrar" icon={<AddIcon />} />
           <BottomNavigationAction label="Referidos" value="referidos" icon={<MenuBookIcon />} />
           <BottomNavigationAction label="Anuncios" value="anuncios" icon={<AnnouncementIcon />} />
           <BottomNavigationAction label="Usuario" value="usuario" icon={<AccountCircleIcon />} />
