@@ -60,64 +60,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Info() {
   const classes = useStyles();
-  const { register, handleSubmit } = useForm()
-  // const [value, setValue] = useState('info');
+  const [value, setValue] = useState('anuncios');
 
-
-
-  useEffect(() => {
-    api.buscarTelefono("000")
-      .then(respuesta => {
-        console.log("ARRANCAR-API")
-      })
-
-    api.buscarPass(localStorage.getItem('user'))
-      .then(respuesta => {
-        if (respuesta.data.status == "EXITO") {
-          // localStorage.setItem('user',respuesta.data.password)
-          console.log("CORRECTO")
-        } else {
-          window.location.href = '/'
-        }
-        console.log(respuesta);
-      })
-  }, []);
-
-
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   return (
-    <Container className="containerInfo">
-      {/* <Container className={classes.root}>
+  
+      <Container className={classes.root}>
         <BottomNavigation value={value} onChange={handleChange}>
-          <BottomNavigationAction component={Link} to={'/registrar'}label="Registrar" value="registrar" icon={<AddIcon />} />
+          <BottomNavigationAction component={Link} to={'/Registrar'}label="Registrar" value="registrar" icon={<AddIcon />} />
           <BottomNavigationAction label="Referidos" value="referidos" icon={<MenuBookIcon />} />
-          <BottomNavigationAction label="Anuncios" value="anuncios" icon={<AnnouncementIcon />} />
+          <BottomNavigationAction component={Link} to={'/Info'}label="Anuncios" value="anuncios" icon={<AnnouncementIcon />} />
           <BottomNavigationAction label="Usuario" value="usuario" icon={<AccountCircleIcon />} />
         </BottomNavigation>
-      </Container> */}
-
-      <Container>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          // {...register('telefono')}
-          required
-          fullWidth
-          id="telefono"
-          label="Número de Teléfono"
-          name="telefono"
-          type="text"
-        // autoComplete="email"
-        // autoFocus
-        />
-     
-        
-
-
-
       </Container>
 
-
-    </Container>
   );
 }
