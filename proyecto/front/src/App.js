@@ -6,6 +6,8 @@ import Info from './components/Info/Info';
 import Login from './components/Login/Login';
 import Registrar from './components/Registrar/Registrar';
 import Navbar from './components/Navbar/Navbar';
+import Usuario from './components/Usuario/Usuario';
+import Referidos from './components/Referidos/Referidos';
 // import BottomBar from './components/BottomBar';
 function App() {
 
@@ -26,6 +28,8 @@ function App() {
         <Navbar/>
         <Route path="/registrar" exact component={Registrar} />
         <Route path="/info" exact component={Info} /> 
+        <Route path="/usuario" exact component={Usuario} /> 
+        <Route path="/referidos" exact component={Referidos} /> 
         </div>
       </Switch> 
 

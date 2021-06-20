@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 // import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+// import Button from '@material-ui/core/Button';
+// import ButtonGroup from '@material-ui/core/ButtonGroup';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import FolderIcon from '@material-ui/icons/Folder';
+// import FolderIcon from '@material-ui/icons/Folder';
 import AddIcon from '@material-ui/icons/Add';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
+// import CssBaseline from '@material-ui/core/CssBaseline';
+// import TextField from '@material-ui/core/TextField';
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import '../css/estilos.css';
 // import aguila from './a2.png';
-import { useForm } from 'react-hook-form';
-import api from '../../api/crud'
+// import { useForm } from 'react-hook-form';
+// import api from '../../api/crud'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Info() {
   const classes = useStyles();
-  const [value, setValue] = useState('anuncios');
+  const [value, setValue] = useState('');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -71,9 +71,9 @@ export default function Info() {
       <Container className={classes.root}>
         <BottomNavigation value={value} onChange={handleChange}>
           <BottomNavigationAction component={Link} to={'/Registrar'}label="Registrar" value="registrar" icon={<AddIcon />} />
-          <BottomNavigationAction label="Referidos" value="referidos" icon={<MenuBookIcon />} />
+          <BottomNavigationAction component={Link} to={'/Referidos'}label="Referidos" value="referidos" icon={<MenuBookIcon />} />
           <BottomNavigationAction component={Link} to={'/Info'}label="Anuncios" value="anuncios" icon={<AnnouncementIcon />} />
-          <BottomNavigationAction label="Usuario" value="usuario" icon={<AccountCircleIcon />} />
+          <BottomNavigationAction component={Link} to={'/Usuario'} label="Usuario" value="usuario" icon={<AccountCircleIcon />} />
         </BottomNavigation>
       </Container>
 

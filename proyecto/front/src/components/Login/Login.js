@@ -57,7 +57,7 @@ export default function Login() {
 
     api.buscarPass(localStorage.getItem('user'))
     .then(respuesta => {
-      if(respuesta.data.status=="EXITO"){
+      if(respuesta.data.status==="EXITO"){
         // localStorage.setItem('user',respuesta.data.password)
         window.location.href='#info'
       }else{
