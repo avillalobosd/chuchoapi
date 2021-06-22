@@ -208,6 +208,32 @@ app.get("/chuchoapi/ClavePass/:id", (req, res) => {
 
 });
 
+// SUMA 1 A AGREGADOS 
+app.get("/chuchoapi/suma/:id", (req, res) => {
+  console.log(req.params.id);
+  BD.findOne({
+    where: {
+      id: req.params.id
+    }
+  })
+    .then(data => {
+      var suma=data.agregados+1
+      
+      BD.update({agregados:suma}, {
+        where: {
+          id: req.params.id
+        }
+      })
+      res.json({status:"OK"})
+    }).catch(function (err) {
+      res.json({
+        status: "ERROR"
+      })
+    });;
+
+
+});
+
 app.get("/chuchoapi/hijos/:id", (req, res) => {
   BD.update({hijos:true}, {
     where: {
