@@ -72,7 +72,7 @@ export default function Info() {
         <BottomNavigation value={value} onChange={handleChange}>
           <BottomNavigationAction component={Link} to={'/Registrar'}label="Registrar" value="registrar" icon={<AddIcon />} />
           <BottomNavigationAction component={Link} to={'/Referidos'}label="Referidos" value="referidos" icon={<MenuBookIcon />} />
-          <BottomNavigationAction component={Link} to={'/Info'}label="Anuncios" value="anuncios" icon={<AnnouncementIcon />} />
+          {/* <BottomNavigationAction component={Link} to={'/Info'}label="Anuncios" value="anuncios" icon={<AnnouncementIcon />} /> */}
           <BottomNavigationAction component={Link} to={'/Usuario'} label="Usuario" value="usuario" icon={<AccountCircleIcon />} />
         </BottomNavigation>
       </Container>

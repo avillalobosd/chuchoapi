@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import useState from 'react-usestateref'
 
 // import { makeStyles } from '@material-ui/core/styles';
-// import Container from '@material-ui/core/Container';
+import Container from '@material-ui/core/Container';
 // import Typography from '@material-ui/core/Typography';
 // import Box from '@material-ui/core/Box';
 // import Button from '@material-ui/core/Button';
@@ -12,76 +12,42 @@ import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Collapse from '@material-ui/core/Collapse';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { useSpring, animated } from 'react-spring'; // web.cjs is required for IE 11 support
 import '../css/estilos.css';
 
+
 import { Grid } from '@material-ui/core';
 import api from '../../api/crud'
+var arrayToTree = require('array-to-tree');
 // import aguila from './a2.png';
 
-function MinusSquare(props) {
-  return (
-    <SvgIcon fontSize="inherit" style={{ width: 14, height: 14 }} {...props}>
-      {/* tslint:disable-next-line: max-line-length */}
-      <path d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z" />
-    </SvgIcon>
-  );
-}
 
-function PlusSquare(props) {
-  return (
-    <SvgIcon fontSize="inherit" style={{ width: 14, height: 14 }} {...props}>
-      {/* tslint:disable-next-line: max-line-length */}
-      <path d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 12.977h-4.923v4.896q0 .401-.281.682t-.682.281v0q-.375 0-.669-.281t-.294-.682v-4.896h-4.923q-.401 0-.682-.294t-.281-.669v0q0-.401.281-.682t.682-.281h4.923v-4.896q0-.401.294-.682t.669-.281v0q.401 0 .682.281t.281.682v4.896h4.923q.401 0 .682.281t.281.682v0q0 .375-.281.669t-.682.294z" />
-    </SvgIcon>
-  );
-}
-
-function CloseSquare(props) {
-  return (
-    <SvgIcon className="close" fontSize="inherit" style={{ width: 14, height: 14 }} {...props}>
-      {/* tslint:disable-next-line: max-line-length */}
-      <path d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z" />
-    </SvgIcon>
-  );
-}
-
-function TransitionComponent(props) {
-  const style = useSpring({
-    from: { opacity: 0, transform: 'translate3d(20px,0,0)' },
-    to: { opacity: props.in ? 1 : 0, transform: `translate3d(${props.in ? 0 : 20}px,0,0)` },
-  });
-
-  return (
-    <animated.div style={style}>
-      <Collapse {...props} />
-    </animated.div>
-  );
-}
-
-TransitionComponent.propTypes = {
-  /**
-   * Show the component; triggers the enter or exit states
-   */
-  in: PropTypes.bool,
-};
-
-const StyledTreeItem = withStyles((theme) => ({
-  iconContainer: {
-    '& .close': {
-      opacity: 0.3,
+let data = {
+  id: '0',
+  name: 'Parent',
+  children: [
+    {
+      id: '1',
+      name: 'Child - 1',
     },
-  },
-  group: {
-    marginLeft: 7,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${fade(theme.palette.text.primary, 0.4)}`,
-  },
-}))((props) => <TreeItem {...props} TransitionComponent={TransitionComponent} />);
+    {
+      id: '3',
+      name: 'Child - 3',
+      children: [
+        {
+          id: '4',
+          name: 'Child - 4',
+        },
+      ],
+    },
+  ],
+};
 
 const useStyles = makeStyles({
   root: {
-    height: 264,
+    height: 110,
     flexGrow: 1,
     maxWidth: 400,
   },
@@ -94,26 +60,30 @@ export default function Referidos() {
   const classes = useStyles();
   // const [user, setUser, userRef]=useState("")
   const [id, setId, idRef] = useState("")
+  const [usuario, setUsuario, usuarioRef] = useState("")
   const [cadena, setCadena, cadenaRef] = useState("")
   const [listaHijos, setListaHijos, listaHijosRef] = useState(0)
   const [tieneHijos, setTieneHijos, tieneHijosRef] = useState(false)
+  const [arbol, setArbol, arbolRef] = useState()
 
   useEffect(() => {
     api.buscarTelefono("000")
       .then(respuesta => {
-        console.log("ARRANCAR-API")
+        // console.log("ARRANCAR-API")
       })
 
     api.buscarPass(localStorage.getItem('user'))
       .then(respuesta => {
         if (respuesta.data.status === "EXITO") {
+          console.log(respuesta.data)
           // setUser(respuesta.data)
           setId(respuesta.data.id)
           setCadena(respuesta.data.cadena)
           setTieneHijos(respuesta.data.hijos)
+          setUsuario(respuesta.data)
           // console.log(respuesta.data)
           // localStorage.setItem('user',respuesta.data.password)
-          console.log("CORRECTO")
+          // console.log("CORRECTO")
         } else {
           window.location.href = '/'
         }
@@ -123,24 +93,66 @@ export default function Referidos() {
           api.muestraHijos(cadenaRef.current + idRef.current + '-')
             .then(respuesta => {
               setListaHijos(respuesta.data)
-              console.log(listaHijosRef.current)
-              crearRamas()
+              crearRamas(respuesta.data)
             })
           // console.log(listaHijosRef.current)
         } else {
-          console.log("NO TIENE HIJOS")
+          // console.log("NO TIENE HIJOS")
           // crearRamas(idRef.current)
         }
 
       })
 
-    function crearRamas() {
-      console.log("CREANDO RAMAS")
-      var hijos = listaHijosRef.current
-      hijos.map(function (x) {
-        console.log(x.cadena);
-        return 0
-      });
+    function crearRamas(datos) {
+      
+        var root=usuarioRef.current
+        root.referido=0
+        datos.push(root)
+        
+    var nodes = datos,
+        tree = function (data, root) {
+            var r = [], o = {};
+            data.forEach(function (a) {
+                if (o[a.id] && o[a.id].children) {
+                    a.children = o[a.id] && o[a.id].children;
+                }
+                o[a.id] = a;
+                if (a.referido === root) {
+                    r.push(a);
+                } else {
+                    o[a.referido] = o[a.referido] || {};
+                    o[a.referido].children = o[a.referido].children || [];
+                    o[a.referido].children.push(a);
+                }
+            });
+            return r;
+        }(nodes, 0);
+    setArbol(tree[0])
+    console.log(tree[0]);
+  //     var z=datos;
+  //     console.log(z)
+  //     var nodes = z,
+  //     tree = function (data, root) {
+  //         var r = [], o = {};
+  //         data.forEach(function (a) {
+  //             if (o[a.id] && o[a.id].children) {
+  //                 a.children = o[a.id] && o[a.id].children;
+  //             }
+  //             o[a.id] = a;
+  //             if (a.referido === root) {
+  //                 r.push(a);
+  //             } else {
+  //                 o[a.referido] = o[a.referido] || {};
+  //                 o[a.referido].children = o[a.referido].children || [];
+  //                 o[a.referido].children.push(a);
+  //             }
+  //         });
+  //         return r;
+  //     }(nodes, 0);
+  
+  // console.log(tree);
+  
+
 
     }
 
@@ -148,56 +160,23 @@ export default function Referidos() {
   }, []);
 
 
-  function recursivo(x){
-    if(x.cadena===cadenaRef.current+idRef.current+'-'){
 
-      return(
-        <StyledTreeItem nodeId="1" label={x.nombre}>
-        </StyledTreeItem>)
-    }else {
-      return
-    }
-
-  }
-
+  const renderTree = (nodes) => (
+    // console.log(arbolRef.current)
+    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.nombre}>
+      {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
+    </TreeItem>
+  );
   return (
+
+    arbol ?
     <TreeView
       className={classes.root}
+      defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpanded={['1']}
-      defaultCollapseIcon={<MinusSquare />}
-      defaultExpandIcon={<PlusSquare />}
-      defaultEndIcon={<CloseSquare />}
+      defaultExpandIcon={<ChevronRightIcon />}
     >
-
-      {
-
-        listaHijosRef.current.length > 0 ? listaHijos.map(function (x) {
-            return (recursivo(x))
-        }) : ( <StyledTreeItem nodeId="1" label="SIN REFERIDOS">
-              </StyledTreeItem> )
-        
-      }
-
-
-
-
-
-
-      {/* <StyledTreeItem nodeId="1" label="Main">
-        <StyledTreeItem nodeId="2" label="Hello" />
-        <StyledTreeItem nodeId="3" label="Subtree with children">
-          <StyledTreeItem nodeId="6" label="Hello" />
-          <StyledTreeItem nodeId="7" label="Sub-subtree with children">
-            <StyledTreeItem nodeId="9" label="Child 1" />
-            <StyledTreeItem nodeId="10" label="Child 2" />
-            <StyledTreeItem nodeId="11" label="Child 3" />
-            <StyledTreeItem nodeId="12" label="Child 4" />
-          </StyledTreeItem>
-          <StyledTreeItem nodeId="8" label="Hello" />
-        </StyledTreeItem>
-        <StyledTreeItem nodeId="4" label="World" />
-        <StyledTreeItem nodeId="5" label="Something something" />
-      </StyledTreeItem> */}
-    </TreeView>
+      {renderTree(arbolRef.current)}
+    </TreeView> : null
   );
 }

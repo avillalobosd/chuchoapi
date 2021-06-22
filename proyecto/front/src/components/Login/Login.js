@@ -59,7 +59,7 @@ export default function Login() {
     .then(respuesta => {
       if(respuesta.data.status==="EXITO"){
         // localStorage.setItem('user',respuesta.data.password)
-        window.location.href='#info'
+        window.location.href='#registrar'
       }else{
         localStorage.setItem('user','NO')
       }
@@ -73,7 +73,7 @@ export default function Login() {
     .then(respuesta => {
       if(respuesta.data.status=="EXITO"){
         localStorage.setItem('user',respuesta.data.password)
-        window.location.href='#info'
+        window.location.href='#registrar'
       }else{
         alert("USIARIO NO EXISTE ")
       }
