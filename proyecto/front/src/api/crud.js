@@ -34,5 +34,9 @@ export default {
     muestraHijos: function (id) {
         return axios.get(API_URL + "/muestraHijos/" + id);
 
+    },
+    sumar: function (id) {
+        return axios.get(API_URL + "/suma/" + id);
+
     }
 };

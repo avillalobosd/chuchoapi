@@ -240,6 +240,8 @@ export default function Info() {
       verificado: 0,
       cadena: cadenaRef.current+idRef.current+'-'
     }).then(respuesta => {
+
+      api.sumar(idRef.current)
       if(respuesta.data.status==="EXITO"){
         alert("USUARIO AGREGADO CORRECTAMENTE")
         window.location.reload();

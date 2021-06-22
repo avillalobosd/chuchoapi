@@ -163,7 +163,7 @@ export default function Referidos() {
 
   const renderTree = (nodes) => (
     // console.log(arbolRef.current)
-    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.nombre}>
+    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.nombre+" "+nodes.ap_paterno+" "+nodes.ap_materno+"("+nodes.agregados+")"}>
       {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
     </TreeItem>
   );
