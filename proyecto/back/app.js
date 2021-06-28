@@ -4,10 +4,12 @@ const sequelize = require('./database/db');
 const BD = require('./database/models/User');
 var cors = require('cors');
 const Seq=require('sequelize')
+const fileUpload = require('express-fileupload');
+const path = require('path');
 // Setting
 const PORT = process.env.PORT || 3000;
 const Op = Seq.Op;
-
+app.use(fileUpload());
 //cors
 app.use(cors());
 
@@ -22,6 +24,12 @@ var corsOptions = {
   }
 }
 app.use(express.json());
+app.use(express.static(__dirname+'public'));
+// app.use('/static',express.static(__dirname+'/public'));
+// app.use(express.static(path.join(__dirname,'public')));
+// app.use('/static', express.static(path.join(__dirname, '/public')));
+// var publicDir = require('path').join(__dirname,'/public'); 
+// app.use(express.static(publicDir)); 
 
 
 // Rutas
@@ -72,6 +80,19 @@ app.get('/chuchoapi/muestra', function (req, res) {
 
 });
 
+
+app.get('/chuchoapi/referidos/:id', function (req, res) {
+
+  BD.findAll({
+    where: {
+      referido: req.params.id
+    },order: [
+      ['nombre', 'ASC'],
+  ]
+  }).then(users => {
+    res.json(users);
+  });
+});
 
 app.get('/chuchoapi/muestraHijos/:idPadre', function (req, res) {
 
@@ -171,6 +192,37 @@ app.put("/chuchoapi/registrar", (request, res) => {
     })
   });;
 })
+
+app.put("/chuchoapi/sumarTodos", (request, res) => {
+  BD.update({
+    agregados: sequelize.literal('agregados +1')},{  where: {
+      id: 1
+  }} )
+
+//   BD.increment({agregados: 1}, {  where: {
+//     id: {
+//         $in: request.body.sumar
+//     }
+// }})
+
+})
+
+app.put("/chuchoapi/foto", (request, res) => {
+  if (request.files === null) {
+    return res.json({ msg: 'No file uploaded' });
+  }
+
+  const file = request.files.file;
+
+  file.mv(`${__dirname}/public/uploads/${file.name}`, err => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send(err);
+    }
+
+    res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+  });
+});
 
 // BUSCA LA CONTRESEÑA EN LA BASE DE DATOS 
 app.get("/chuchoapi/ClavePass/:id", (req, res) => {
