@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import '../css/estilos.css';
@@ -88,12 +89,18 @@ export default function Login() {
       <Container component="main" maxWidth="xs">
       <CssBaseline />
         <div className={classes.paper}>
-        <img className={classes.aguila}src={aguila}></img>
+        <img alt="" className={classes.aguila}src={aguila}></img>
 
           <Typography component="h1" variant="h5">
-            Acceso
+
+          <Box fontSize={20} letterSpacing={5} fontWeight="fontWeightBold" textAlign="center" m={1}>
+          Para ingresar dar click al link enviado durante su registro
+            <br></br>
+            {/* <CircularProgress /> */}
+        </Box>
+            
         </Typography>
-          <form className={classes.form} noValidate onSubmit={handleSubmit((data)=> buscarTelefono(data) )}>
+          {/* <form className={classes.form} noValidate onSubmit={handleSubmit((data)=> buscarTelefono(data) )}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -118,7 +125,7 @@ export default function Login() {
               Entrar
           </Button>
 
-          </form>
+          </form> */}
         </div>
 
       </Container>

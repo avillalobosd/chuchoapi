@@ -10,13 +10,17 @@ import AddIcon from '@material-ui/icons/Add';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 // import CssBaseline from '@material-ui/core/CssBaseline';
 // import TextField from '@material-ui/core/TextField';
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-// import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 import '../css/estilos.css';
+import aguila from './a2.png';
 // import aguila from './a2.png';
 // import { useForm } from 'react-hook-form';
 // import api from '../../api/crud'
@@ -32,6 +36,17 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '5px',
     paddingBottom: '10px',
     zIndex: 5,
+  },
+  root1: {
+    background: 'black',
+    position: '-webkit-sticky',
+    position: 'sticky',
+    top: 0,
+    bottom: 0,
+    paddingTop: '5px',
+    paddingBottom: '10px',
+    zIndex: 4,
+    alignItems:'center'
   },
   paper: {
     marginTop: theme.spacing(8),
@@ -53,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     // alignItems:'center'
   },
   aguila: {
-    width: '150px', // Fix IE 11 issue.
+    width: '50px', // Fix IE 11 issue.
     // marginTop: theme.spacing(1),
   },
 }));
@@ -69,12 +84,30 @@ export default function Info() {
   return (
   
       <Container className={classes.root}>
+
+<Grid className={classes.root1}
+      container
+      // spacing={24}
+      justify="center"
+      // style={{ minHeight: '100vh', maxWidth: '100%' }}
+      >
+        <img className={classes.aguila} alt="chucho" src={aguila}></img>
+        <Typography component="div">
+          <Box fontSize={20} letterSpacing={3} color="white" fontWeight="fontWeightBold" textAlign="center" m={1}>
+            #PONTECHUCHO
+          </Box>
+
+        </Typography>
+
+        </Grid>
         <BottomNavigation value={value} onChange={handleChange}>
           <BottomNavigationAction component={Link} to={'/Registrar'}label="Registrar" value="registrar" icon={<AddIcon />} />
           <BottomNavigationAction component={Link} to={'/Referidos'}label="Referidos" value="referidos" icon={<MenuBookIcon />} />
-          {/* <BottomNavigationAction component={Link} to={'/Info'}label="Anuncios" value="anuncios" icon={<AnnouncementIcon />} /> */}
+          <BottomNavigationAction component={Link} to={'/Llaves'}label="Llaves" value="llaves" icon={<VpnKeyIcon />} />
           <BottomNavigationAction component={Link} to={'/Usuario'} label="Usuario" value="usuario" icon={<AccountCircleIcon />} />
         </BottomNavigation>
+      
+      
       </Container>
 
   );

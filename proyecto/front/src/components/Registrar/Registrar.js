@@ -6,10 +6,14 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Fab from "@material-ui/core/Fab";
+import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import '../css/estilos.css';
 import { useForm } from 'react-hook-form';
 import api from '../../api/crud'
 import { FormControl } from '@material-ui/core';
+import { useParams } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -43,12 +47,25 @@ const useStyles = makeStyles((theme) => ({
     // alignItems:'center'
   },
   aguila: {
-    width: '150px', // Fix IE 11 issue.
+    width: '100px', // Fix IE 11 issue.
     // marginTop: theme.spacing(1),
   },
+  input: {
+    display: "none"
+  },
+  fab:{
+    // width: "50%",
+    // margin: "auto",
+    // display:"block",
+    "margin-left": "auto",
+   "margin-right":"auto"
+  }
 }));
 
-export default function Info() {
+export default function Registrar() {
+
+  let { slug } = useParams();
+  console.log(slug)
   const classes = useStyles();
   const { register, handleSubmit } = useForm()
   const [state, setState] = React.useState({
@@ -58,8 +75,12 @@ export default function Info() {
 
   });
   const [id, setId, idRef] = useState("")
+  const [fotoSubida, setFotoSubida, fotoSubidaRef] = useState("")
   const [cadena, setCadena, cadenaRef] = useState("")
+  const [nombreArchivo, setNombreArchivo, nombreArchivoRef] = useState("")
+  const [fotoEnviar, setfotoEnviar, fotoEnviarRef] = useState("")
   const [errorNoEmp, setErrorNoEmp, errorNoEmpRef] = useState(false)
+  const [contra, setContra, contraRef] = useState(false)
   const [errorNombre, setErrorNombre, errorNombreRef] = useState(false)
   const [errorPaterno, setErrorPaterno, errorPaternoRef] = useState(false)
   const [errorMaterno, setErrorMaterno, errorMaternoRef] = useState(false)
@@ -103,7 +124,7 @@ export default function Info() {
     setErrorNivel(false)
     setErrorActivoJubilado(false)
     setErrorSexo(false)
-  },[]);
+  }, []);
 
 
 
@@ -165,7 +186,7 @@ export default function Info() {
       // problemas=true;
     }
 
-    if (errorMunicipioRef.current ||errorNoEmpRef.current || errorNombreRef.current || errorPaternoRef.current || errorMaternoRef.current || errorEscuelaRef.current || errorSexoRef.current || errorNivelRef.current || errorActivoJubiladoRef.current || errorRegionRef.current || errorTelefonoRef.current) {
+    if (errorMunicipioRef.current || errorNoEmpRef.current || errorNombreRef.current || errorPaternoRef.current || errorMaternoRef.current || errorEscuelaRef.current || errorSexoRef.current || errorNivelRef.current || errorActivoJubiladoRef.current || errorRegionRef.current || errorTelefonoRef.current) {
       console.log("ERROR")
       alert("Faltan Campos(En Rojo)")
     } else {
@@ -209,53 +230,119 @@ export default function Info() {
     charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var randomString = '';
     for (var i = 0; i < len; i++) {
-        var randomPoz = Math.floor(Math.random() * charSet.length);
-        randomString += charSet.substring(randomPoz,randomPoz+1);
+      var randomPoz = Math.floor(Math.random() * charSet.length);
+      randomString += charSet.substring(randomPoz, randomPoz + 1);
     }
     return randomString;
-}
+  }
 
 
   function registrar(data) {
-    let contra= randomString(10)
+    let cadenaF = randomString(10)
+    setNombreArchivo(cadenaF)
+    let fotog = "http://"
+    const formData = new FormData();
+    if (nombreArchivo === "") {
+      console.log("NO HAY FOTO")
+    } else {
+      formData.append('file', fotoEnviarRef.current, cadenaRef.current + ".jpg");
+      fotog = "https://api.pontechucho.com/public/uploads/" + nombreArchivoRef.current + '.jpg'
+      console.log(data.foto[0])
+    }
+    // e.preventDefault();
 
-    // console.log(data)
-   
-    api.registrar({
-      nombre: data.nombre,
-      ap_paterno: data.ap_paterno,
-      ap_materno: data.ap_materno,
-      no_emp: data.no_emp,
-      sexo: data.sexo,
-      municipio: data.municipio,
-      escuela: data.escuela,
-      region: data.region,
-      telefono: data.telefono,
-      activojubilado: data.activojubilado,
-      nivel: data.nivel,
-      foto: "http://",
-      referido: idRef.current,
-      password: contra,
-      agregados: 0,
-      verificado: 0,
-      cadena: cadenaRef.current+idRef.current+'-'
-    }).then(respuesta => {
 
-      api.sumar(idRef.current)
-      if(respuesta.data.status==="EXITO"){
-        alert("USUARIO AGREGADO CORRECTAMENTE")
-        window.location.reload();
 
-      } else
-      alert("#EMPLEADO O TELEFONO YA CAPTURADO REVISAR INFORMACION")
+
+    api.subirFoto(formData).then(respuesta => {
+      console.log(respuesta)
+      api.registrar({
+        nombre: data.nombre,
+        ap_paterno: data.ap_paterno,
+        ap_materno: data.ap_materno,
+        no_emp: data.no_emp,
+        sexo: data.sexo,
+        municipio: data.municipio,
+        escuela: data.escuela,
+        region: data.region,
+        telefono: data.telefono,
+        activojubilado: data.activojubilado,
+        nivel: data.nivel,
+        foto: fotog,
+        referido: idRef.current,
+        password: nombreArchivoRef.current,
+        agregados: 0,
+        verificado: 0,
+        cadena: cadenaRef.current + idRef.current + '-',
+        imagen: ""
+      }).then(respuesta2 => {
+
+        var arrayDeCadenas = cadenaRef.current.split("-")
+        function removeItemFromArr ( arr, item ) {
+          var i = arr.indexOf( item );
+       
+          if ( i !== -1 ) {
+              arr.splice( i, 1 );
+          }
+      }
+       
+      removeItemFromArr( arrayDeCadenas, "" );
+      removeItemFromArr( arrayDeCadenas, "0" );
+      let nuevoVector=[]
+        arrayDeCadenas.forEach((elemento) => {
+        nuevoVector.push(Number(elemento))
+      });
+      console.info( nuevoVector );
+        
+        nuevoVector.push(idRef.current)
+        console.log(nuevoVector)
+        // var enviarSumatodos={sumar:nuevoVector}
+        api.sumarTodos({sumar:nuevoVector})
+       
+       
+        if (respuesta2.data.status === "EXITO") {
+          alert("USUARIO AGREGADO CORRECTAMENTE")
+          window.location.reload();
+
+        } else
+          alert("#EMPLEADO O TELEFONO YA CAPTURADO REVISAR INFORMACION")
+      })
     })
-
     api.hijos(idRef.current).then(respuesta => {
       console.log(respuesta.data)
     })
 
   }
 
+  const fileHandler = event => {
+    const { files } = event.target;
+            setfotoEnviar(files[0])
+            var src= URL.createObjectURL(files[0])
+            var alt= files[0].name
+            console.log(src)
+            console.log(alt)
+            setFotoSubida(src)
+  };
+
+  const handleUploadClick = (event) => {
+    console.log();
+    var file = register.foto[0]
+    const reader = new FileReader();
+    var url = reader.readAsDataURL(file);
+    console.log(url)
+    // reader.onloadend = function(e) {
+    //   this.setState({
+    //     selectedFile: [reader.result]
+    //   });
+    // }.bind(this);
+    // console.log(url); // Would see a path?
+
+    // this.setState({
+    //   mainState: "uploaded",
+    //   selectedFile: event.target.files[0],
+    //   imageUploaded: 1
+    };
+  // };
   const handleChange = (event) => {
     const name = event.target.name;
     setState({
@@ -275,8 +362,9 @@ export default function Info() {
       </Container> */}
 
       <Container>
+      
         <form className={classes.form} noValidate onSubmit={handleSubmit((data) => revisa(data))}>
-
+       
           <TextField
             error={errorNombre}
             // helperText="Introducir Nombre"
@@ -440,7 +528,79 @@ export default function Info() {
           // autoComplete="email"
           // autoFocus
           />
-          <TextField
+          <FormControl style={{ width: '100%' }}>
+            <InputLabel style={{ marginTop: "0px" }} htmlFor="outlined-age-native-simple">Municipio</InputLabel>
+            <Select
+              error={errorMunicipio}
+
+              style={{ marginTop: "15px" }}
+              {...register('municipio')}
+              native
+              fullWidth
+              value={state.municipio}
+              onChange={handleChange}
+              label="municipio"
+              inputProps={{
+                name: 'municipio',
+                id: 'outlined-age-native-simple',
+              }}
+            >
+              <option aria-label="None" value="" />
+              <option value={"Abasolo"}>Abasolo</option>
+              <option value={"Agualeguas"}>Agualeguas</option>
+              <option value={"Los Aldamas"}>Los Aldamas</option>
+              <option value={"Allende"}>Allende</option>
+              <option value={"Anáhuac"}>Anáhuac</option>
+              <option value={"Apodaca"}>Apodaca</option>
+              <option value={"Aramberri"}>Aramberri</option>
+              <option value={"Bustamante"}>Bustamante</option>
+              <option value={"Cadereyta Jiménez"}>Cadereyta Jiménez</option>
+              <option value={"Carmen"}>Carmen</option>
+              <option value={"Cerralvo"}>Cerralvo</option>
+              <option value={"Ciénega de Flores"}>Ciénega de Flores</option>
+              <option value={"China"}>China</option>
+              <option value={"Doctor Arroyo"}>Doctor Arroyo</option>
+              <option value={"Doctor Coss"}>Doctor Coss</option>
+              <option value={"Doctor González"}>Doctor González</option>
+              <option value={"Galeana"}>Galeana</option>
+              <option value={"García"}>García</option>
+              <option value={"San Pedro Garza García"}>San Pedro Garza García</option>
+              <option value={"General Bravo"}>General Bravo</option>
+              <option value={"General Escobedo"}>General Escobedo</option>
+              <option value={"General Terán"}>General Terán</option>
+              <option value={"General Treviño"}>General Treviño</option>
+              <option value={"General Zaragoza"}>General Zaragoza</option>
+              <option value={"General Zuazua"}>General Zuazua</option>
+              <option value={"Guadalupe"}>Guadalupe</option>
+              <option value={"Los Herreras"}>Los Herreras</option>
+              <option value={"Higueras"}>Higueras</option>
+              <option value={"Hualahuises"}>Hualahuises</option>
+              <option value={"Iturbide"}>Iturbide</option>
+              <option value={"Juárez"}>Juárez</option>
+              <option value={"Lampazos de Naranjo"}>Lampazos de Naranjo</option>
+              <option value={"Linares"}>Linares</option>
+              <option value={"Marín"}>Marín</option>
+              <option value={"Melchor Ocampo"}>Melchor Ocampo</option>
+              <option value={"Mier y Noriega"}>Mier y Noriega</option>
+              <option value={"Mina"}>Mina</option>
+              <option value={"Montemorelos"}>Montemorelos</option>
+              <option value={"Monterrey"}>Monterrey</option>
+              <option value={"Parás"}>Parás</option>
+              <option value={"Pesquería"}>Pesquería</option>
+              <option value={"Los Ramones"}>Los Ramones</option>
+              <option value={"Rayones"}>Rayones</option>
+              <option value={"Sabinas Hidalgo"}>Sabinas Hidalgo</option>
+              <option value={"Salinas Victoria"}>Salinas Victoria</option>
+              <option value={"San Nicolás de los Garza"}>San Nicolás de los Garza</option>
+              <option value={"Hidalgo"}>Hidalgo</option>
+              <option value={"Santa Catarina"}>Santa Catarina</option>
+              <option value={"Santiago"}>Santiago</option>
+              <option value={"Vallecillo"}>Vallecillo</option>
+              <option value={"Villaldama"}>Villaldama</option>
+
+            </Select>
+          </FormControl>
+          {/* <TextField
             error={errorMunicipio}
             // helperText="Introducir Region"
             size="small"
@@ -455,7 +615,7 @@ export default function Info() {
             type="text"
           // autoComplete="email"
           // autoFocus
-          />
+          /> */}
           <TextField
             error={errorTelefono}
             // helperText="Introducir Telefono"
@@ -472,6 +632,26 @@ export default function Info() {
           // autoComplete="email"
           // autoFocus
           />
+
+        <input
+            type="file"
+            {...register('foto')}
+            name="foto"
+            id="foto"
+            label="foto"
+            className={classes.input}
+            accept="image/*"
+            onChange={fileHandler}
+          />
+          <label htmlFor="foto">
+            
+            <Fab className={classes.fab}variant="extended" component="span">
+              <AddPhotoAlternateIcon />Foto Credencial
+            </Fab>
+          </label>
+          <br></br>
+          {fotoSubida=="" ? <div></div> :  <img className={classes.aguila} alt="chucho" src={fotoSubida}></img>}
+         
 
           <Button
             type="submit"

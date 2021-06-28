@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import axios from "axios";
-const API_URL = 'https://abecode.com/chuchoapi';
+const API_URL = 'https://api.pontechucho.com/chuchoapi';
 
 export default {
 
@@ -25,18 +25,33 @@ export default {
     registrar: function (datos) {
         return axios.put(API_URL + "/registrar", datos)
     },
+    subirFoto: function (datos) {
+        return axios.put(API_URL + "/foto", datos,{
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+    },
     // ACTUALIZA INDICANDO QUE YA CUENTA CON HIJOS 
     hijos: function (id) {
         return axios.get(API_URL + "/hijos/" + id);
 
     },
-    // ACTUALIZA INDICANDO QUE YA CUENTA CON HIJOS 
+    // REGRESA LOS HIJOS E HIJOS DE LOS HIJOS
     muestraHijos: function (id) {
         return axios.get(API_URL + "/muestraHijos/" + id);
 
     },
     sumar: function (id) {
         return axios.get(API_URL + "/suma/" + id);
+
+    //REGRESA SOLO LOS REFERIDOS DIRECTOS
+    },sumarTodos: function (datos) {
+        return axios.put(API_URL + "/sumarTodos", datos)
+    
+    //REGRESA SOLO LOS REFERIDOS DIRECTOS
+    },referidos: function (id) {
+        return axios.get(API_URL + "/referidos/" + id);
 
     }
 };
