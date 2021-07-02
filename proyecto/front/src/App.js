@@ -10,6 +10,7 @@ import Usuario from './components/Usuario/Usuario';
 import Referidos from './components/Referidos/Referidos';
 import Ingresar from './components/Ingresar/Ingresar';
 import Llaves from './components/Llaves/Llaves';
+import Ayuda from './components/Ayuda/Ayuda';
 // import BottomBar from './components/BottomBar';
 function App() {
 
@@ -33,7 +34,9 @@ function App() {
         <Route path="/usuario" exact component={Usuario} /> 
         <Route path="/referidos" exact component={Referidos} /> 
         <Route path="/llaves" exact component={Llaves} /> 
+        <Route path="/ayuda" exact component={Ayuda} />
         <Route path="/ingresar/:cadena" exact component={Ingresar} />
+
         </div>
       </Switch> 
 

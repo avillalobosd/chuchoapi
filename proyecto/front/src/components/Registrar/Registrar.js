@@ -14,7 +14,10 @@ import { useForm } from 'react-hook-form';
 import api from '../../api/crud'
 import { FormControl } from '@material-ui/core';
 import { useParams } from 'react-router-dom';
-
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '5px',
     paddingBottom: '10px',
     zIndex: 5,
+  },  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   },
   paper: {
     marginTop: theme.spacing(8),
@@ -63,6 +69,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Registrar() {
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
   let { slug } = useParams();
   console.log(slug)
@@ -91,6 +100,10 @@ export default function Registrar() {
   const [errorActivoJubilado, setErrorActivoJubilado, errorActivoJubiladoRef] = useState(false)
   const [errorRegion, setErrorRegion, errorRegionRef] = useState(false)
   const [errorTelefono, setErrorTelefono, errorTelefonoRef] = useState(false)
+  const [open, setOpen, openRef] = useState(false);
+  const [openEmpleado, setOpenEmpleado, openEmpleadoRef] = useState(false);
+  const [openTelefono, setOpenTelefono, OpenTelefonoRef] = useState(false);
+  const [openCampos, setOpenCampos, openCamposRef] = useState(false);
 
   useEffect(() => { console.log("errorNoEmp data changed") }, [errorNoEmp])
 
@@ -126,7 +139,12 @@ export default function Registrar() {
     setErrorSexo(false)
   }, []);
 
-
+  const handleCloseToggle = () => {
+    setOpen(false);
+  };
+  const handleToggle = () => {
+    setOpen(!open);
+  };
 
   const revisa = async function revisarFormulario(data) {
     // var problemas=false;
@@ -188,7 +206,8 @@ export default function Registrar() {
 
     if (errorMunicipioRef.current || errorNoEmpRef.current || errorNombreRef.current || errorPaternoRef.current || errorMaternoRef.current || errorEscuelaRef.current || errorSexoRef.current || errorNivelRef.current || errorActivoJubiladoRef.current || errorRegionRef.current || errorTelefonoRef.current) {
       console.log("ERROR")
-      alert("Faltan Campos(En Rojo)")
+      // alert("Faltan Campos(En Rojo)")
+      setOpenCampos(true)
     } else {
       console.log("NO ERROR")
       enviarFormulario(data)
@@ -201,17 +220,24 @@ export default function Registrar() {
   }
 
   function enviarFormulario(data) {
+    setOpen(true)
     api.buscarTelefono(data.telefono)
       .then(respuesta => {
         if (respuesta.data.status === "EXITO") {
           // localStorage.setItem('user',respuesta.data.password)
-          alert("Telefono ya registrado con otro usuario")
+          setOpen(false)
+          setOpenTelefono(true)
+          setErrorTelefono(true)
+          // alert("Telefono ya registrado con otro usuario")
         } else {
           api.buscarNoEmpleado(data.no_emp)
             .then(respuesta2 => {
               if (respuesta2.data.status === "EXITO") {
                 // localStorage.setItem('user',respuesta.data.password)
-                alert("No Empleado ya registrado")
+                // alert("No Empleado ya registrado")
+                setOpen(false)
+                setOpenEmpleado(true)
+                setErrorNoEmp (true)
               } else {
                 console.log("CORRECTO")
                 registrar(data)
@@ -240,12 +266,12 @@ export default function Registrar() {
   function registrar(data) {
     let cadenaF = randomString(10)
     setNombreArchivo(cadenaF)
-    let fotog = "http://"
+    let fotog = "https://api.pontechucho.com/public/uploads/id.jpg"
     const formData = new FormData();
     if (nombreArchivo === "") {
       console.log("NO HAY FOTO")
     } else {
-      formData.append('file', fotoEnviarRef.current, cadenaRef.current + ".jpg");
+      formData.append('file', fotoEnviarRef.current, cadenaF + ".jpg");
       fotog = "https://api.pontechucho.com/public/uploads/" + nombreArchivoRef.current + '.jpg'
       console.log(data.foto[0])
     }
@@ -277,32 +303,35 @@ export default function Registrar() {
         imagen: ""
       }).then(respuesta2 => {
 
-        var arrayDeCadenas = cadenaRef.current.split("-")
-        function removeItemFromArr ( arr, item ) {
-          var i = arr.indexOf( item );
-       
-          if ( i !== -1 ) {
-              arr.splice( i, 1 );
-          }
-      }
-       
-      removeItemFromArr( arrayDeCadenas, "" );
-      removeItemFromArr( arrayDeCadenas, "0" );
-      let nuevoVector=[]
-        arrayDeCadenas.forEach((elemento) => {
-        nuevoVector.push(Number(elemento))
-      });
-      console.info( nuevoVector );
-        
-        nuevoVector.push(idRef.current)
-        console.log(nuevoVector)
-        // var enviarSumatodos={sumar:nuevoVector}
-        api.sumarTodos({sumar:nuevoVector})
        
        
         if (respuesta2.data.status === "EXITO") {
-          alert("USUARIO AGREGADO CORRECTAMENTE")
-          window.location.reload();
+          var arrayDeCadenas = cadenaRef.current.split("-")
+          function removeItemFromArr ( arr, item ) {
+            var i = arr.indexOf( item );
+         
+            if ( i !== -1 ) {
+                arr.splice( i, 1 );
+            }
+        }
+         
+        removeItemFromArr( arrayDeCadenas, "" );
+        removeItemFromArr( arrayDeCadenas, "0" );
+        let nuevoVector=[]
+          arrayDeCadenas.forEach((elemento) => {
+          nuevoVector.push(Number(elemento))
+        });
+        console.log( nuevoVector );
+          
+          nuevoVector.push(idRef.current)
+          console.log(nuevoVector)
+          // var enviarSumatodos={sumar:nuevoVector}
+          api.sumarTodos({sumar:nuevoVector}).then(data => {
+            alert("USUARIO AGREGADO CORRECTAMENTE")
+            setOpen(false)
+            window.location.reload();
+          })
+
 
         } else
           alert("#EMPLEADO O TELEFONO YA CAPTURADO REVISAR INFORMACION")
@@ -319,29 +348,12 @@ export default function Registrar() {
             setfotoEnviar(files[0])
             var src= URL.createObjectURL(files[0])
             var alt= files[0].name
+            setNombreArchivo(files[0].name)
             console.log(src)
             console.log(alt)
             setFotoSubida(src)
   };
 
-  const handleUploadClick = (event) => {
-    console.log();
-    var file = register.foto[0]
-    const reader = new FileReader();
-    var url = reader.readAsDataURL(file);
-    console.log(url)
-    // reader.onloadend = function(e) {
-    //   this.setState({
-    //     selectedFile: [reader.result]
-    //   });
-    // }.bind(this);
-    // console.log(url); // Would see a path?
-
-    // this.setState({
-    //   mainState: "uploaded",
-    //   selectedFile: event.target.files[0],
-    //   imageUploaded: 1
-    };
   // };
   const handleChange = (event) => {
     const name = event.target.name;
@@ -350,6 +362,19 @@ export default function Registrar() {
       [name]: event.target.value,
     });
   };
+
+
+  const handleCloseSnack = () => {
+    setOpenTelefono(false);
+    setOpenEmpleado(false);
+    setOpenCampos(false);
+  };
+
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }}
   return (
     <Container className="containerInfo">
       {/* <Container className={classes.root}>
@@ -360,6 +385,9 @@ export default function Registrar() {
           <BottomNavigationAction label="Usuario" value="usuario" icon={<AccountCircleIcon />} />
         </BottomNavigation>
       </Container> */}
+       <Backdrop className={classes.backdrop} open={open}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
       <Container>
       
@@ -668,9 +696,41 @@ export default function Registrar() {
 
 
 
-
-
       </Container>
+
+      <div className={classes.root}>
+      {/* <Button variant="outlined" onClick={handleClick}>
+        Open success snackbar
+      </Button> */}
+      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={openTelefono} autoHideDuration={4000} onClose={handleCloseSnack}>
+        <Alert onClose={handleClose} severity="error">
+          Teléfono ya registrado en sistema
+        </Alert>
+      </Snackbar>
+
+    </div>
+    <div className={classes.root}>
+      {/* <Button variant="outlined" onClick={handleClick}>
+        Open success snackbar
+      </Button> */}
+      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={openEmpleado} autoHideDuration={4000} onClose={handleCloseSnack}>
+        <Alert onClose={handleClose} severity="error">
+          Número de Empleado ya registrado en sistema
+        </Alert>
+      </Snackbar>
+
+    </div>
+    <div className={classes.root}>
+      {/* <Button variant="outlined" onClick={handleClick}>
+        Open success snackbar
+      </Button> */}
+      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={openCampos} autoHideDuration={4000} onClose={handleCloseSnack}>
+        <Alert onClose={handleClose} severity="error">
+          Faltan Campos
+        </Alert>
+      </Snackbar>
+
+    </div>
 
 
     </Container>

@@ -3,8 +3,9 @@ import useState from 'react-usestateref'
 
 // import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-// import Typography from '@material-ui/core/Typography';
-// import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Link from '@material-ui/core/Link';
 // import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import SvgIcon from '@material-ui/core/SvgIcon';
@@ -47,16 +48,26 @@ let data = {
 
 const useStyles = makeStyles({
   root: {
-    height: 110,
+    height: '100%',
     flexGrow: 1,
     maxWidth: 400,
-  },
+  }, footer: {
+    "margin-top": "calc(80% + 60px)",
+    bottom: "0"
+  }, imagen: {
+    width: '100%', // Fix IE 11 issue.
+    // height:'100px'
+    // marginTop: theme.spacing(1),
+  }
 });
 
 
 
 
 export default function Referidos() {
+
+
+
   const classes = useStyles();
   // const [user, setUser, userRef]=useState("")
   const [id, setId, idRef] = useState("")
@@ -65,6 +76,7 @@ export default function Referidos() {
   const [listaHijos, setListaHijos, listaHijosRef] = useState(0)
   const [tieneHijos, setTieneHijos, tieneHijosRef] = useState(false)
   const [arbol, setArbol, arbolRef] = useState()
+  const [mostrar, setMostrar, mostrarRef] = useState()
 
   useEffect(() => {
     api.buscarTelefono("000")
@@ -75,7 +87,7 @@ export default function Referidos() {
     api.buscarPass(localStorage.getItem('user'))
       .then(respuesta => {
         if (respuesta.data.status === "EXITO") {
-          console.log(respuesta.data)
+          // console.log(respuesta.data)
           // setUser(respuesta.data)
           setId(respuesta.data.id)
           setCadena(respuesta.data.cadena)
@@ -104,55 +116,31 @@ export default function Referidos() {
       })
 
     function crearRamas(datos) {
-      
-        var root=usuarioRef.current
-        root.referido=0
-        datos.push(root)
-        
-    var nodes = datos,
-        tree = function (data, root) {
-            var r = [], o = {};
-            data.forEach(function (a) {
-                if (o[a.id] && o[a.id].children) {
-                    a.children = o[a.id] && o[a.id].children;
-                }
-                o[a.id] = a;
-                if (a.referido === root) {
-                    r.push(a);
-                } else {
-                    o[a.referido] = o[a.referido] || {};
-                    o[a.referido].children = o[a.referido].children || [];
-                    o[a.referido].children.push(a);
-                }
-            });
-            return r;
-        }(nodes, 0);
-    setArbol(tree[0])
-    console.log(tree[0]);
-  //     var z=datos;
-  //     console.log(z)
-  //     var nodes = z,
-  //     tree = function (data, root) {
-  //         var r = [], o = {};
-  //         data.forEach(function (a) {
-  //             if (o[a.id] && o[a.id].children) {
-  //                 a.children = o[a.id] && o[a.id].children;
-  //             }
-  //             o[a.id] = a;
-  //             if (a.referido === root) {
-  //                 r.push(a);
-  //             } else {
-  //                 o[a.referido] = o[a.referido] || {};
-  //                 o[a.referido].children = o[a.referido].children || [];
-  //                 o[a.referido].children.push(a);
-  //             }
-  //         });
-  //         return r;
-  //     }(nodes, 0);
-  
-  // console.log(tree);
-  
 
+      var root = usuarioRef.current
+      root.referido = 0
+      datos.push(root)
+
+      var nodes = datos,
+        tree = function (data, root) {
+          var r = [], o = {};
+          data.forEach(function (a) {
+            if (o[a.id] && o[a.id].children) {
+              a.children = o[a.id] && o[a.id].children;
+            }
+            o[a.id] = a;
+            if (a.referido === root) {
+              r.push(a);
+            } else {
+              o[a.referido] = o[a.referido] || {};
+              o[a.referido].children = o[a.referido].children || [];
+              o[a.referido].children.push(a);
+            }
+          });
+          return r;
+        }(nodes, 0);
+      setArbol(tree[0])
+      // console.log(tree[0]);
 
     }
 
@@ -163,20 +151,88 @@ export default function Referidos() {
 
   const renderTree = (nodes) => (
     // console.log(arbolRef.current)
-    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.nombre+" "+nodes.ap_paterno+" "+nodes.ap_materno+" ("+nodes.agregados+")"}>
+    // "ok"
+    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.nombre + " " + nodes.ap_paterno + " " + nodes.ap_materno + " (" + nodes.agregados + ")"} onClick={(e) => handleClick(e, nodes.id)}>
       {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
     </TreeItem>
   );
+
+
+  const handleClick = (e, id) => {
+    e.preventDefault()
+    // console.log(listaHijos)
+    var a = listaHijos.find(x => x.id === id);
+    console.log("OK")
+    setMostrar(a)
+    console.log(mostrarRef.current)
+
+  };
   return (
 
-    arbol ?
-    <TreeView
-      className={classes.root}
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpanded={['1']}
-      defaultExpandIcon={<ChevronRightIcon />}
-    >
-      {renderTree(arbolRef.current)}
-    </TreeView> : null
+    <Box height="100vw" container direction="row" justify="flex-start">
+      <Box height="20vw" style={{ overflow: "auto", backgroundColor: 'gray.300' }}>
+        {/* IMAGEN */}
+        <Box
+          // style={{ overflow: "auto" }}
+          alignItems="center"
+          justify="center"
+          width="30%"
+          bgcolor="gray.300"
+          display="inline-block">
+        
+          {mostrar ? mostrar.foto=="http://" ? "" : <img className={classes.imagen} src={mostrar.foto}></img> :""}
+        </Box>
+        {/* DATOS */}
+        <Box
+        fontSize={13}
+          width="70%"
+          position="absolute"
+          bgcolor="gray.300"
+          display="inline-block">
+          Nombre: {mostrar ? mostrar.nombre + " " + mostrar.ap_paterno + " " + mostrar.ap_materno : ""}
+          <br></br>
+          Escuela: {mostrar ? mostrar.escuela : ""}
+          <br></br>
+          Municipio: {mostrar ? mostrar.municipio : ""}
+          <br></br>
+          Telefono: {mostrar ? mostrar.telefono : ""}
+        </Box>
+
+
+      </Box>
+      <Box width="100%" style={{ overflow: 'auto', backgroundColor: 'white' }}>
+        {arbol ?
+          <TreeView
+            className={classes.root}
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpanded={['1']}
+            defaultExpandIcon={<ChevronRightIcon />}
+          >
+            {renderTree(arbolRef.current)}
+          </TreeView>
+          : null}
+
+      </Box>
+
+
+    </Box>
+
+    //   <Box height="70vw" width="100%">
+    //   <Box height="25%" bgcolor="grey.300" mx={0.5} width={120} display="inline-block">
+    //     Height 25%
+    //   </Box>
+    //   <Box height="50%" bgcolor="grey.300" mx={0.5} width={120} display="inline-block">
+    //     Height 50%
+    //   </Box>
+    //   <Box height="75%" bgcolor="grey.300" mx={0.5} width={120} display="inline-block">
+    //     Height 75%
+    //   </Box>
+    //   <Box height="100%" bgcolor="grey.300" mx={0.5} width={120} display="inline-block">
+    //     Height 100%
+    //   </Box>
+    // </Box>
+
   );
+
+
 }
