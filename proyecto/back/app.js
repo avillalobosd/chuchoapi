@@ -7,7 +7,7 @@ const Seq=require('sequelize')
 const fileUpload = require('express-fileupload');
 const path = require('path');
 // Setting
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const Op = Seq.Op;
 app.use(fileUpload());
 //cors
@@ -34,13 +34,19 @@ app.use(express.static(__dirname+'public'));
 
 // Rutas
 app.get('/', function (req, res) {
+    console.log("DENTRO")
 
-  BD.create({
-    name: "OK",
-    birthday: new Date(1999, 4, 6)
-  }).then(user => {
-    res.json(user);
-  });
+    // BD.update({
+    //   agregados: sequelize.literal('agregados +1')},{  where: {
+    //     id: 1
+    // }} )
+
+//   BD.increment({agregados: 1}, {  where: {
+//     id: [1,2,4]
+// }})
+
+    res.json("si");
+
 
   // User.findAll().then(users => {
   //     res.json(users);
@@ -50,9 +56,9 @@ app.get('/', function (req, res) {
 app.get('/chuchoapi/crea', function (req, res) {
 
   BD.create({
-    nombre: "Jesús Manuel",
-    ap_paterno: "Ortiz",
-    ap_materno: "Morales",
+    nombre: "MASTER",
+    ap_paterno: "MASTER",
+    ap_materno: "MASTER",
     no_emp: "00000",
     sexo: "Masculino",
     municipio: "García",
@@ -63,8 +69,10 @@ app.get('/chuchoapi/crea', function (req, res) {
     nivel: "Primaria",
     foto: "http://",
     referido: 0,
-    agregados: 0,
-    verificado: true
+    agregados: 1,
+    verificado: true,
+    password:"wArewAre15",
+    cadena:"0-"
 
   }).then(user => {
     { }
@@ -177,7 +185,7 @@ app.put("/chuchoapi/registrar", (request, res) => {
     foto: request.body.foto,
     password: request.body.password,
     referido: request.body.referido,
-    agregados: 0,
+    agregados: 1,
     verificado: false,
     cadena:request.body.cadena,
     hijos:false
@@ -194,16 +202,21 @@ app.put("/chuchoapi/registrar", (request, res) => {
 })
 
 app.put("/chuchoapi/sumarTodos", (request, res) => {
-  BD.update({
-    agregados: sequelize.literal('agregados +1')},{  where: {
-      id: 1
-  }} )
 
-//   BD.increment({agregados: 1}, {  where: {
-//     id: {
-//         $in: request.body.sumar
-//     }
-// }})
+  console.log(request.body)
+  // BD.update({
+  //   agregados: sequelize.literal('agregados +1')},{  where: {
+  //     id: 1
+  // }} )
+
+  BD.increment({agregados: 1}, {  where: {
+    id: request.body.sumar
+}}).then(data => {
+
+  res.json({
+    status: "LISTO"
+  })
+})
 
 })
 
