@@ -139,6 +139,31 @@ app.get("/chuchoapi/TelefonoOne/:id", (req, res) => {
       })
     });;
 });
+//BUSCA CLAVE DE ACCESO
+app.get("/chuchoapi/ClaveOne/:id", (req, res) => {
+  console.log(req.params.id);
+  BD.findOne({
+    where: {
+      password: req.params.id
+    }
+
+  })
+    .then(data => {
+      res.json({
+        id: data.id,
+        nombre: data.nombre,
+        ap_paterno: data.ap_paterno,
+        ap_materno: data.ap_materno,
+        telefono: data.telefono,
+        password: data.password,
+        status: "EXITO"
+      })
+    }).catch(function (err) {
+      res.json({
+        status: "ERROR"
+      })
+    });;
+});
 
 // BUSCA EL NO_EMPLEADO EN LA BASE DE DATOS 
 app.get("/chuchoapi/NoEmpleado/:id", (req, res) => {
