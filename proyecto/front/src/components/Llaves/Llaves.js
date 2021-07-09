@@ -195,9 +195,10 @@ export default function Referidos() {
   aria-labelledby="alert-dialog-title"
   aria-describedby="alert-dialog-description"
 >
-  <DialogTitle id="alert-dialog-title">{persona.nombre}</DialogTitle>
+  <DialogTitle id="alert-dialog-title">{persona.nombre} <br></br> Clave de Acceso: {persona.password}</DialogTitle>
   <DialogContent >
     <DialogContentText id="alert-dialog-description">
+      Link de Acceso
       <textarea readonly disable className={classes.table}ref={textAreaRef} >{persona.link}</textarea>
       
     </DialogContentText>

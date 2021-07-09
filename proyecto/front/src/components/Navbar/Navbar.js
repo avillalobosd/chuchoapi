@@ -71,7 +71,16 @@ const useStyles = makeStyles((theme) => ({
   aguila: {
     width: '50px', // Fix IE 11 issue.
     // marginTop: theme.spacing(1),
-  },
+  }, nav1: {
+    width: "100%",
+    // position: "fixed",
+    // bottom: 0,
+    "& .MuiBottomNavigationAction-root": {
+      "@media (max-width: 768px)": {
+        minWidth: "auto",
+        padding: "6px 0"
+      }}
+  }
 }));
 
 export default function Info() {
@@ -101,7 +110,7 @@ export default function Info() {
         </Typography>
 
         </Grid>
-        <BottomNavigation showLabels value={value} onChange={handleChange}>
+        <BottomNavigation className={classes.nav1}showLabels value={value} onChange={handleChange}>
           <BottomNavigationAction component={Link} to={'/Registrar'}label="Registrar" value="registrar" icon={<AddIcon />} />
           <BottomNavigationAction component={Link} to={'/Referidos'}label="Referidos" value="referidos" icon={<MenuBookIcon />} />
           <BottomNavigationAction component={Link} to={'/Llaves'}label="Llaves" value="llaves" icon={<VpnKeyIcon />} />

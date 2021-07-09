@@ -70,37 +70,38 @@ export default function Login() {
 
 
   function buscarTelefono(data){
-    api.buscarTelefono(data.telefono)
+    api.buscarClave(data.telefono)
     .then(respuesta => {
       if(respuesta.data.status=="EXITO"){
         localStorage.setItem('user',respuesta.data.password)
         window.location.href='#registrar'
       }else{
-        alert("USIARIO NO EXISTE ")
+        alert("USUARIO NO EXISTE ")
       }
         console.log(respuesta);
     })
 
   }
 
+
   return (
     <Container className="container">
-      
+    
       <Container component="main" maxWidth="xs">
       <CssBaseline />
         <div className={classes.paper}>
         <img alt="" className={classes.aguila}src={aguila}></img>
 
-          <Typography component="h1" variant="h5">
+          {/* <Typography component="h1" variant="h5">
 
           <Box fontSize={20} letterSpacing={5} fontWeight="fontWeightBold" textAlign="center" m={1}>
           Para ingresar dar click al link enviado durante su registro
             <br></br>
-            {/* <CircularProgress /> */}
+          
         </Box>
             
-        </Typography>
-          {/* <form className={classes.form} noValidate onSubmit={handleSubmit((data)=> buscarTelefono(data) )}>
+        </Typography> */}
+          <form className={classes.form} noValidate onSubmit={handleSubmit((data)=> buscarTelefono(data) )}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -108,7 +109,7 @@ export default function Login() {
               required
               fullWidth
               id="telefono"
-              label="Número de Teléfono"
+              label="Clave de Acceso"
               name="telefono"
               type="text"
               // autoComplete="email"
@@ -125,10 +126,11 @@ export default function Login() {
               Entrar
           </Button>
 
-          </form> */}
+          </form>
         </div>
-
+        
       </Container>
+
     </Container>
   );
 }

@@ -14,6 +14,10 @@ export default {
         return axios.get(API_URL + "/TelefonoOne/" + id);
 
     },
+    buscarClave: function (id) {
+        return axios.get(API_URL + "/ClaveOne/" + id);
+
+    },
     buscarPass: function (id) {
         return axios.get(API_URL + "/ClavePass/" + id);
 

@@ -6,7 +6,10 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-
+// import { Player } from 'video-react';
+import { Player, ControlBar } from 'video-react';
+import video1 from './video.mp4';
+import ReactPlayer from 'react-player'
 
 import '../css/estilos.css';
 
@@ -68,7 +71,7 @@ function salir(e){
 
   return (
     <>
-    
+<ReactPlayer  width="100%" controls url={video1} ></ReactPlayer>
     </>
   );
 }
